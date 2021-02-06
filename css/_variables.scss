@@ -1,0 +1,12 @@
+$backgroundGradientStart: #65e0f6;
+$backgroundGradientEnd: #41a8fd;
+$buttonColor: #84c9f1;
+$listBTNColor: #ff4747;
+$completeBackground: rgb(73, 204, 73);
+$progressColor: #4450c2;
+
+@mixin flexCenter() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

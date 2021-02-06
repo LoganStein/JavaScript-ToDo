@@ -1,0 +1,142 @@
+@import "./variables";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(
+    to right bottom,
+    $backgroundGradientStart,
+    $backgroundGradientEnd
+  );
+  color: white;
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  height: fit-content;
+}
+
+header {
+  font-size: 1rem;
+}
+
+.progress-container {
+  background: white;
+  height: 20px;
+  width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 1rem;
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: $progressColor;
+    border-radius: 1rem;
+  }
+}
+
+form,
+header {
+  min-height: 20vh;
+  @include flexCenter();
+  input,
+  button {
+    padding: 0.5rem;
+    font-size: 2rem;
+    border: none;
+    background: white;
+  }
+  button {
+    cursor: pointer;
+    background: white;
+    color: $buttonColor;
+    transition: all 0.3s ease;
+    &:hover {
+      background: $buttonColor;
+      color: white;
+    }
+  }
+}
+
+.todo-container {
+  @include flexCenter();
+}
+
+.todo-list {
+  min-width: 30%;
+  list-style: none;
+}
+
+.todo {
+  margin: 0.5rem;
+  background: white;
+  color: black;
+  font-size: 1.5rem;
+  @include flexCenter();
+  justify-content: space-between;
+  //   transition: all 0.5s ease;
+  li {
+    flex: 1;
+    padding: 0 1rem;
+  }
+}
+
+.trash-btn,
+.complete-btn {
+  background: $listBTNColor;
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.complete-btn {
+  background: $completeBackground;
+}
+
+.fa-trash,
+.fa-check {
+  pointer-events: none;
+}
+
+.completed {
+  text-decoration: line-through;
+  opacity: 0.6 !important;
+}
+
+select {
+  appearance: none;
+  outline: none;
+  border: none;
+
+  color: $buttonColor;
+  cursor: pointer;
+  width: 10rem;
+  padding: 1rem;
+}
+
+.select {
+  margin: 1rem;
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "\25BC";
+    position: absolute;
+    background: $buttonColor;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    pointer-events: none;
+    transition: all 0.5s ease;
+  }
+  &:hover::after {
+    background: white;
+    color: $buttonColor;
+  }
+}
