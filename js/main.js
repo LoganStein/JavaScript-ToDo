@@ -3,6 +3,66 @@ const todoInput = document.querySelector(".todo-input");
 const todoButton = document.querySelector(".todo-button");
 const todoList = document.querySelector(".todo-list");
 const filterOption = document.querySelector(".filter-todo");
+const temp = document.querySelector(".temp");
+const icon = document.querySelector("#weather-icon");
+const body = document.querySelector("#body");
+
+const fakeData = {
+  coord: { lon: -87.65, lat: 41.85 },
+  weather: [
+    { id: 804, main: "Clouds", description: "overcast clouds", icon: "13d" },
+  ],
+  base: "stations",
+  main: {
+    temp: 290.07,
+    feels_like: 285.13,
+    temp_min: 289.82,
+    temp_max: 290.37,
+    pressure: 1021,
+    humidity: 36,
+  },
+  visibility: 10000,
+  wind: { speed: 4.61, deg: 192, gust: 7.45 },
+  clouds: { all: 94 },
+  dt: 1616431771,
+  sys: {
+    type: 3,
+    id: 2005153,
+    country: "US",
+    sunrise: 1616413799,
+    sunset: 1616457881,
+  },
+  timezone: -18000,
+  id: 4887398,
+  name: "Chicago",
+  cod: 200,
+};
+
+// parseData(fakeData);
+
+let now = new Date();
+console.log(now.getHours());
+
+//test
+let time = now.getHours();
+if (time < 12) {
+  body.classList = "body-morning";
+} else if (time > 12 && time < 17) {
+  body.classList = "body-day";
+} else if (time > 17 && time < 20) {
+  body.classList = "body-evening";
+} else if (time > 20) {
+  body.classList = "body-night";
+}
+
+console.log(body.classList);
+
+// weather API
+const response = fetch(
+  "https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=f49f0e7908fb08acbf988ff3a0bfaea3"
+)
+  .then((response) => response.json())
+  .then((data) => parseData(data));
 
 //Event listeners
 document.addEventListener("DOMContentLoaded", getTodos);
@@ -12,6 +72,49 @@ todoList.addEventListener("click", finishedCheck);
 filterOption.addEventListener("click", filterTodo);
 
 //functions
+
+function parseData(data) {
+  temp.innerHTML = kelToF(data.main.temp) + " &#176;"; //set temp
+  //set icons
+  console.log(data.weather[0].icon);
+  //clouds
+  if (data.weather[0].icon == "04d" || data.weather[0].icon == "04n") {
+    icon.classList = "ri-cloudy-fill";
+  } else if (
+    data.weather[0].icon == "03d" ||
+    data.weather[0].icon == "03n" ||
+    data.weather[0].icon == "02d" ||
+    data.weather[0].icon == "02n"
+  ) {
+    icon.classList = "ri-sun-cloudy-fill";
+  }
+  //clear
+  else if (data.weather[0].id == 800) {
+    icon.classList = "ri-sun-fill";
+  }
+  //foggy icon
+  else if (data.weather[0].icon == "50d") {
+    icon.classList = "ri-mist-fill";
+  }
+  //snow
+  else if (data.weather[0].icon == "13d") {
+    icon.classList = "ri-snowy-fill";
+  }
+  //rain
+  else if (data.weather[0].icon == "10d" || data.weather[0].icon == "09d") {
+    icon.classList = "ri-heavy-showers-fill";
+  } else if (data.weather[0].icon == "11d") {
+    icon.classList = "ri-thunderstorms-fill";
+  }
+  // unknown
+  else {
+    icon.classList = "ri-question-mark";
+  }
+}
+
+function kelToF(tempK) {
+  return Math.round((tempK * 9) / 5 - 459.67);
+}
 
 function deleteCheck(event) {
   const item = event.target;
