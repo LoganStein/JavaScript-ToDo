@@ -79,6 +79,10 @@ header {
   border-radius: 1rem;
 }
 
+.progress-container #timer {
+  background-color: #6e9de9;
+}
+
 form,
 header {
   min-height: 20vh;
@@ -223,5 +227,9 @@ select {
 .select:hover::after {
   background: white;
   color: #84c9f1;
+}
+
+.progressComplete {
+  background-color: #21d821 !important;
 }
 /*# sourceMappingURL=main.css.map */

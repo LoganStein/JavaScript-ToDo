@@ -41,7 +41,6 @@ const fakeData = {
 // parseData(fakeData);
 
 let now = new Date();
-console.log(now.getHours());
 
 //test
 let time = now.getHours();
@@ -49,34 +48,35 @@ if (time < 12) {
   body.classList = "body-morning";
 } else if (time > 12 && time < 17) {
   body.classList = "body-day";
-} else if (time > 17 && time < 20) {
+} else if (time > 16 && time < 20) {
   body.classList = "body-evening";
 } else if (time > 20) {
   body.classList = "body-night";
 }
 
-console.log(body.classList);
-
-// weather API
-const response = fetch(
-  "https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=f49f0e7908fb08acbf988ff3a0bfaea3"
-)
-  .then((response) => response.json())
-  .then((data) => parseData(data));
+progressBar();
 
 //Event listeners
 document.addEventListener("DOMContentLoaded", getTodos);
-todoButton.addEventListener("click", addTodo);
+todoButton.addEventListener("click", addTodo); //also adding weather update when adding a todo
 todoList.addEventListener("click", deleteCheck);
 todoList.addEventListener("click", finishedCheck);
 filterOption.addEventListener("click", filterTodo);
+
+// weather API
+function getWeatherData() {
+  const response = fetch(
+    "https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=f49f0e7908fb08acbf988ff3a0bfaea3"
+  )
+    .then((response) => response.json())
+    .then((data) => parseData(data));
+}
 
 //functions
 
 function parseData(data) {
   temp.innerHTML = kelToF(data.main.temp) + " &#176;"; //set temp
   //set icons
-  console.log(data.weather[0].icon);
   //clouds
   if (data.weather[0].icon == "04d" || data.weather[0].icon == "04n") {
     icon.classList = "ri-cloudy-fill";
@@ -142,7 +142,6 @@ function deleteCheck(event) {
 }
 
 function deleteItem(x, forRemoval) {
-  console.log(x);
   removeLocalTodos(x);
   forRemoval.remove();
   progressBar();
@@ -171,8 +170,6 @@ function finishedCheck(event) {
     if (__FOUND != -1) {
       updateItem(__FOUND, updateTo);
     }
-    console.log(__FOUND);
-    console.log(item.parentElement.children[0].innerHTML);
     item.parentElement.classList.toggle("completed");
     // filterTodo(filterOption);
     // gsap.to(item.parentElement, 1, { opacity: 0.6 });
@@ -218,7 +215,6 @@ function addTodo(event) {
 
 function filterTodo(event) {
   const todos = todoList.childNodes;
-  console.log(event.target.value);
   todos.forEach(function (todo) {
     switch (event.target.value) {
       case "all":
@@ -322,6 +318,7 @@ function removeLocalTodos(toRemove) {
   localStorage.setItem("todos", JSON.stringify(todos)); // push to local storage
 }
 
+//make progress bar update
 function progressBar() {
   if (localStorage.getItem("todos") === null) {
     todos = [];
@@ -340,11 +337,44 @@ function progressBar() {
 
   // console.log(todos);
 
-  let percent = 0.0;
-  percent = done / total;
+  let percentProg = 0.0;
+  percentProg = done / total;
 
-  percent *= 100;
+  percentProg *= 100;
   // console.log(percent, done, total);
 
-  gsap.to(".progress-bar", 1, { width: percent + "%" });
+  gsap.to("#progress-bar", 1, { width: percentProg + "%" });
+
+  refresh();
+}
+//set the progress bar that shows time
+function timerBar() {
+  let percent;
+  let currentMin = 0;
+  let time = new Date();
+  totalMin = 450; // 7.5 hours in min
+  startHour = 8;
+  startMin = 30;
+  currentMin =
+    (time.getHours() - startHour) * 60 + (time.getMinutes() - startMin); // number of min since 8:30 am
+  if (time.getHours() == startHour && time.getMinutes() == startMin) {
+    //start timer
+  }
+  percent = currentMin / totalMin;
+  console.log(currentMin);
+  percent *= 100;
+  if (percent > 100) {
+    percent = 100;
+  }
+  console.log(time.getHours() + ":" + time.getMinutes());
+  console.log(percent);
+  gsap.to("#timer", 1, { width: percent + "%" });
+  if (percent >= 100) {
+    document.getElementById("timer").classList.add("progressComplete");
+  }
+}
+
+function refresh() {
+  getWeatherData(); //updates weather info
+  timerBar(); //updates timer bar
 }

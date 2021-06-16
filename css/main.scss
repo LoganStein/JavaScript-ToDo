@@ -77,6 +77,9 @@ header {
     background: $progressColor;
     border-radius: 1rem;
   }
+  #timer {
+    background-color: $timeProgressColor;
+  }
 }
 
 form,
@@ -181,4 +184,8 @@ select {
     background: white;
     color: $buttonColor;
   }
+}
+
+.progressComplete {
+  background-color: rgb(33, 216, 33) !important;
 }
